@@ -1,0 +1,53 @@
+import React, { useState, useEffect } from "react";
+import { Box, Flex, Button, Heading, Text } from "@chakra-ui/react";
+import { FaReact } from "react-icons/fa";
+
+const Index = () => {
+  const [isActive, setIsActive] = useState(false);
+  const [score, setScore] = useState(0);
+  const [reaction, setReaction] = useState(null);
+
+  useEffect(() => {
+    if (isActive && reaction === null) {
+      const randomDelay = Math.random() * 5000; // Random delay between 0 and 5 seconds
+      setTimeout(() => {
+        setReaction(new Date());
+      }, randomDelay);
+    }
+  }, [isActive, reaction]);
+
+  const handleClick = () => {
+    if (reaction !== null) {
+      const currentTime = new Date();
+      const reactionTime = currentTime - reaction;
+      setScore((prevScore) => prevScore + 1);
+      setReaction(null);
+      console.log(`Reaction time: ${reactionTime} ms`);
+    }
+  };
+
+  const startGame = () => {
+    setIsActive(true);
+    setScore(0);
+    setReaction(null);
+  };
+
+  return (
+    <Flex height="100vh" alignItems="center" justifyContent="center" flexDirection="column">
+      <Heading mb={6}>Reaction Test Game</Heading>
+      <Box mb={6}>
+        <Text>Score: {score}</Text>
+      </Box>
+      <Box mb={6}>
+        <Button onClick={handleClick} bg={reaction !== null ? "green.500" : "gray.300"} color="white" size="lg" leftIcon={<FaReact />} disabled={!isActive}>
+          Click Me!
+        </Button>
+      </Box>
+      <Button onClick={startGame} disabled={isActive}>
+        Start Game
+      </Button>
+    </Flex>
+  );
+};
+
+export default Index;
